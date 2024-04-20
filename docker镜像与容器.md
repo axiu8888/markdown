@@ -113,24 +113,24 @@
     mkdir -p logs && chmod 755 logs
 
     {
-    # 最大200MB
-    MAX_SIZE=$((200 * (1024 << 10)))
-    logFile=./logs/$jarName.log
-    fileSize=$(wc -c <$logFile)
-    # 判断文件是否达到200MB，如果达到，就压缩，并用空文件覆盖已有文件
-    if [ $fileSize -gt $MAX_SIZE ]; then
-        today=$(date +%Y%m%d)
-        echo "压缩日志文件: "
-        tar -zcvf ./logs/$jarName__$today.tar.gz $logFile
-        echo "" >$logFile
-    fi
+        # 最大200MB
+        MAX_SIZE=$((200 * (1024 << 10)))
+        logFile=./logs/$jarName.log
+        fileSize=$(wc -c <$logFile)
+        # 判断文件是否达到200MB，如果达到，就压缩，并用空文件覆盖已有文件
+        if [ $fileSize -gt $MAX_SIZE ]; then
+            today=$(date +%Y%m%d)
+            echo "压缩日志文件: "
+            tar -zcvf ./logs/$jarName__$today.tar.gz $logFile
+            echo "" >$logFile
+        fi
     }
 
     exec java -jar $jar \
-    -Duser.timezone=GMT+08 \
-    -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:1500 \
-    --spring.config.location=$config \
-    >>./logs/$jarName.log
+     -Duser.timezone=GMT+08 \
+     -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:1500 \
+     --spring.config.location=$config \
+     >>./logs/$jarName.log
 
 
 授权：chmod 777 docker-entrypoint.sh
