@@ -2,6 +2,24 @@
 # docker镜像与容器
 
 
+## daemon.json配置
+
+```
+{
+  "bip": "192.168.0.1/24",
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "50M",
+    "max-file": "10"
+  },
+  "registry-mirrors": [
+    "https://ung2thfc.mirror.aliyuncs.com",
+    "https://registry.docker-cn.com",
+    "http://hub-mirror.c.163.com",
+    "https://docker.mirrors.ustc.edu.cn"
+  ]
+}
+```
 
 
 ## Dockerfile
