@@ -6,13 +6,11 @@
 docker network create --driver bridge mynet
 ```
 
-
 #查看docker容器的网络
 
 ```
 iptables -t nat -vnL
 ```
-
 
 ### MongoDB：
 
@@ -20,17 +18,16 @@ iptables -t nat -vnL
 拉取镜像：docker pull mongo
 运行容器：
 
-docker run --privileged  -d --restart=always \
+docker run --privileged -d --restart=always \
  --network mynet --network-alias mongo-net \
  -e MONGO_INITDB_ROOT_USERNAME=root \
  -e MONGO_INITDB_ROOT_PASSWORD=admin \
  -p 27017:27017 \
- -v /opt/programs/mongo/db:/data/db/ \
+ -v /opt/programs/mongo/db/:/data/db/ \
+ -v /opt/programs/mongo/log/:/data/log/ \
  --name mongo \
  mongo
 ```
-
-
 
 ### mongo-express：
 
@@ -54,34 +51,30 @@ docker run -d \
  mongo-express
 ```
 
-
 镜像地址：https://hub.docker.com/_/mongo-express
 
-| Name                            | Default         | Description                                                                                                                  |
-| ------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| ME_CONFIG_BASICAUTH_USERNAME    | ''              | mongo-express web username                                                                                                   |
-| ME_CONFIG_BASICAUTH_PASSWORD    | ''              | mongo-express web password                                                                                                   |
-| ME_CONFIG_MONGODB_ENABLE_ADMIN  | 'true'          | Enable admin access to all databases. Send strings: `"true"` or `"false"`                                                    |
-| ME_CONFIG_MONGODB_ADMINUSERNAME | ''              | MongoDB admin username                                                                                                       |
-| ME_CONFIG_MONGODB_ADMINPASSWORD | ''              | MongoDB admin password                                                                                                       |
-| ME_CONFIG_MONGODB_PORT          | 27017           | MongoDB port                                                                                                                 |
-| ME_CONFIG_MONGODB_SERVER        | 'mongo'         | MongoDB container name. Use comma delimited list of host names for replica sets.                                             |
-| ME_CONFIG_OPTIONS_EDITORTHEME   | 'default'       | mongo-express editor color theme, [more here](http://codemirror.net/demo/theme.html)                                         |
-| ME_CONFIG_REQUEST_SIZE          | '100kb'         | Maximum payload size. CRUD operations above this size will fail in [body-parser](https://www.npmjs.com/package/body-parser). |
-| ME_CONFIG_SITE_BASEURL          | '/'             | Set the baseUrl to ease mounting at a subdirectory. Remember to include a leading and trailing slash.                        |
-| ME_CONFIG_SITE_COOKIESECRET     | 'cookiesecret'  | String used by [cookie-parser middleware](https://www.npmjs.com/package/cookie-parser) to sign cookies.                      |
-| ME_CONFIG_SITE_SESSIONSECRET    | 'sessionsecret' | String used to sign the session ID cookie by [express-session middleware](https://www.npmjs.com/package/express-session).    |
-| ME_CONFIG_SITE_SSL_ENABLED      | 'false'         | Enable SSL.                                                                                                                  |
-| ME_CONFIG_SITE_SSL_CRT_PATH     | ''              | SSL certificate file.                                                                                                        |
-| ME_CONFIG_SITE_SSL_KEY_PATH     | ''              | SSL key file.                                                                                                                |
-
-
-
+| Name                            | Default         | Description                                                                                                              |
+| ------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| ME_CONFIG_BASICAUTH_USERNAME    | ''              | mongo-express web username                                                                                               |
+| ME_CONFIG_BASICAUTH_PASSWORD    | ''              | mongo-express web password                                                                                               |
+| ME_CONFIG_MONGODB_ENABLE_ADMIN  | 'true'          | Enable admin access to all databases. Send strings:`"true"` or `"false"`                                             |
+| ME_CONFIG_MONGODB_ADMINUSERNAME | ''              | MongoDB admin username                                                                                                   |
+| ME_CONFIG_MONGODB_ADMINPASSWORD | ''              | MongoDB admin password                                                                                                   |
+| ME_CONFIG_MONGODB_PORT          | 27017           | MongoDB port                                                                                                             |
+| ME_CONFIG_MONGODB_SERVER        | 'mongo'         | MongoDB container name. Use comma delimited list of host names for replica sets.                                         |
+| ME_CONFIG_OPTIONS_EDITORTHEME   | 'default'       | mongo-express editor color theme,[more here](http://codemirror.net/demo/theme.html)                                         |
+| ME_CONFIG_REQUEST_SIZE          | '100kb'         | Maximum payload size. CRUD operations above this size will fail in[body-parser](https://www.npmjs.com/package/body-parser). |
+| ME_CONFIG_SITE_BASEURL          | '/'             | Set the baseUrl to ease mounting at a subdirectory. Remember to include a leading and trailing slash.                    |
+| ME_CONFIG_SITE_COOKIESECRET     | 'cookiesecret'  | String used by[cookie-parser middleware](https://www.npmjs.com/package/cookie-parser) to sign cookies.                      |
+| ME_CONFIG_SITE_SESSIONSECRET    | 'sessionsecret' | String used to sign the session ID cookie by[express-session middleware](https://www.npmjs.com/package/express-session).    |
+| ME_CONFIG_SITE_SSL_ENABLED      | 'false'         | Enable SSL.                                                                                                              |
+| ME_CONFIG_SITE_SSL_CRT_PATH     | ''              | SSL certificate file.                                                                                                    |
+| ME_CONFIG_SITE_SSL_KEY_PATH     | ''              | SSL key file.                                                                                                            |
 
 ### nexus3
 
 ```
-docker run --privileged  -d --restart=always \
+docker run --privileged -d --restart=always \
  --network mynet --network-alias nexus3-net \
  -p 9001:8081 \
  -v /opt/programs/nexus3/data:/nexus-data \
@@ -90,12 +83,9 @@ docker run --privileged  -d --restart=always \
  sonatype/nexus3
 ```
 
-
-
-初次启动可能权限不足，需要修改 /opt/programs/nexus3/  目录的权限: 
+初次启动可能权限不足，需要修改 /opt/programs/nexus3/  目录的权限:
 chmod 777 /opt/programs/nexus3 && chmod 777 /opt/programs/nexus3/data
 如果使用 账号admin，密码admin123 登陆不进去，需要修改nexus的账号和密码(进入docker后，到 /opt/sonatype/sonatype-work/nexus3 目录修改admin.password文件, 或者是 /nexus-data/admin.password)，或通过后台日志查看密码后拷贝登陆；
-
 
 ### RabbitMQ：
 
@@ -103,7 +93,7 @@ chmod 777 /opt/programs/nexus3 && chmod 777 /opt/programs/nexus3/data
 拉取镜像：docker pull rabbitmq:3.9-management
 运行容器：
 
-docker run --privileged  -d --restart=always \
+docker run --privileged -d --restart=always \
  --network mynet --network-alias rabbitmq-net \
  -p 5671:5671 \
  -p 5672:5672 \
@@ -116,9 +106,6 @@ docker run --privileged  -d --restart=always \
  rabbitmq:3.9-management
 ```
 
-
-
-
 ### Jenkins:
 
 ```
@@ -128,7 +115,7 @@ docker run --privileged  -d --restart=always \
 # 创建jenkins目录
 cd /opt/programs/ && mkdir -p ./jenkins && chmod 777 ./jenkins && cd ./jenkins
 
-docker run --privileged  -d --restart=always \
+docker run --privileged -d --restart=always \
  --network mynet --network-alias jenkins-net \
  -p 9095:8080 \
  -p 9096:50000 \
@@ -144,24 +131,20 @@ docker run --privileged  -d --restart=always \
 jenkins 在/opt/programs/jenkins目录下，通过软连接到其他目录
 比如 /opt/apps/system目录需要部署一个系统
 
-
-
-
 ### Redis：
 
 ```
 拉取镜像：docker pull redis
 运行容器：
 
-docker run --privileged  -d --restart=always \
+docker run --privileged -d --restart=always \
  --network mynet --network-alias redis-net \
  -p 6379:6379 \
- -v /opt/programs/redis/:/var/lib/data  \
+ -v /opt/programs/redis/redis.conf:/et/redis.conf  \
+ -v /opt/programs/redis/data:/var/lib/data  \
  --name redis  \
- redis --appendonly yes
+ redis --appendonly yes --requirepass "123456"
 ```
-
-
 
 ### Zookeeper安装
 
@@ -202,7 +185,6 @@ firewall-cmd --zone=public --add-port=2888/tcp --permanent
 firewall-cmd --zone=public --add-port=3888/tcp --permanent
 firewall-cmd --reload
 
-
 ```
 拉取镜像：docker pull zookeeper 
 运行容器：
@@ -227,11 +209,7 @@ docker run -d --restart always \
 yum -y install nc
 echo stat|nc 127.0.0.1 2181
 
-
 其他博客参考：https://www.cnblogs.com/kingkoo/p/8732448.html
-
-
-
 
 ### Mariadb
 
@@ -239,7 +217,7 @@ echo stat|nc 127.0.0.1 2181
 拉取镜像：docker pull mariadb
 运行容器：
 
-docker run  --privileged  -d --restart=always \
+docker run  --privileged -d --restart=always \
  --network mynet --network-alias mariadb-net \
  -e TIMEZONE=Asis/Shanghai \
  -e MYSQL_ROOT_PASSWORD=admin \
@@ -252,7 +230,6 @@ docker run  --privileged  -d --restart=always \
  mariadb
 ```
 
-
 my.cnf  配置
 
 ```
@@ -262,11 +239,10 @@ server-id=1
 log-bin=/var/lib/mysql/mysql-bin
 ```
 
-
 集群：
 
 ```
-docker run  --privileged  -d --restart=always \
+docker run  --privileged -d --restart=always \
  --network mynet --network-alias mariadb_cluster-net \
  -e TIMEZONE=Asis/Shanghai \
  -e MYSQL_ROOT_PASSWORD=admin \
@@ -280,8 +256,6 @@ docker run  --privileged  -d --restart=always \
  mariadb 
 ```
 
-
-
 my.cnf  配置
 
 ```
@@ -290,9 +264,6 @@ server-id=2
 relay-log=/var/lib/mysql/relay-bin
 relay-log-index=/var/lib/mysql/relay-bin.index
 ```
-
-
-
 
 ### 特别的 grafana和influxdb
 
@@ -314,17 +285,13 @@ docker run -d --name docker-influxdb-grafana \
 philhawthorne/docker-influxdb-grafana:latest
 ```
 
-
-
-
-
 ### grafana
 
 ```
 拉取镜像：docker pull grafana/grafana
 运行容器：
 
-docker run --privileged  -d --restart=always \
+docker run --privileged -d --restart=always \
  --network mynet --network-alias grafana-net \
  -p 3000:3000 \
  -v /opt/programs/grafana:/var/lib/grafana \
@@ -335,16 +302,13 @@ docker run --privileged  -d --restart=always \
 初始化账号和密码：admin / admin123
 ```
 
-
-
-
 ### influxDB
 
 ```
 拉取镜像：docker pull influxdb
 运行容器：
 
-docker run --privileged  -d --restart=always \
+docker run --privileged -d --restart=always \
  --network mynet --network-alias influxdb-net \
  -p 8086:8086 \
  -v /opt/programs/influxdb/data:/var/lib/influxdb2 \
@@ -363,13 +327,13 @@ docker run --privileged  -d --restart=always \
 
 ```
 
-
 #### 1.8 版本
 
 ```
 docker run --privileged -d --restart=always \
  --network mynet --network-alias influxdb-net \
  -p 8086:8086 \
+ -v /opt/programs/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf \
  -v /opt/programs/influxdb:/var/lib/influxdb \
  --name influxdb \
  influxdb:1.8
@@ -377,7 +341,11 @@ docker run --privileged -d --restart=always \
 
 
 
+influxdb 1.8 创建用户和密码, 进入容器
 
+> docker exec -it influxdb /bin/bash
+> influx
+> create user "admin" with password '123456' with all privileges
 
 ### nexus3
 
@@ -385,7 +353,7 @@ docker run --privileged -d --restart=always \
 拉取镜像：docker pull sonatype/nexus3
 运行容器：
 
-docker run --privileged  -d --restart=always \
+docker run --privileged -d --restart=always \
  --network mynet --network-alias nexus3-net \
  -p 9001:8081 \
  -v /opt/programs/nexus3/data:/nexus-data \
@@ -394,13 +362,9 @@ docker run --privileged  -d --restart=always \
  sonatype/nexus3:3.38.1
 ```
 
-初次启动可能权限不足，需要修改 /opt/programs/nexus3/  目录的权限: 
+初次启动可能权限不足，需要修改 /opt/programs/nexus3/  目录的权限:
 chmod 777 /opt/programs/nexus3 && chmod 777 /opt/programs/nexus3/data
 如果使用 账号admin，密码admin123 登陆不进取，需要修改nexus的账号和密码(进入docker后，到 /opt/sonatype/sonatype-work/nexus3 目录修改admin.password文件, 或者是 /nexus-data/admin.password)，或通过后台日志查看密码后拷贝登陆；
-
-
-
-
 
 ### nginx
 
@@ -408,7 +372,7 @@ chmod 777 /opt/programs/nexus3 && chmod 777 /opt/programs/nexus3/data
 拉取镜像：docker pull nginx
 运行容器：
 
-docker run --privileged  -d --restart=always \
+docker run --privileged -d --restart=always \
  --network mynet --network-alias nginx-net \
  -p 80:80 \
  -p 443:443 \
@@ -420,10 +384,6 @@ docker run --privileged  -d --restart=always \
  --name nginx \
  nginx
 ```
-
-
-
-
 
 ### gitlab
 
@@ -442,7 +402,6 @@ docker run --restart always --privileged=true \
 gitlab/gitlab-ce
 ```
 
-
 配置：
 
 vim  /opt/programs/gitlab/etc/gitlab.rb
@@ -454,8 +413,7 @@ gitlab_rails['gitlab_ssh_host'] = 'gitlab-net'
 gitlab_rails['gitlab_shell_ssh_port'] = 22
 ```
 
-
-vim  /opt/programs/gitlab/gitlab/var/gitlab-rails/etc/gitlab.yml 
+vim  /opt/programs/gitlab/gitlab/var/gitlab-rails/etc/gitlab.yml
 #修改如下配置
 
 ```
@@ -475,7 +433,7 @@ gitlab:
     # Otherwise, ssh host will be set to the `host:` value above
 ssh_host: gitlab-net
 ```
- 
+
 使配置生效：gitlab-ctl reconfigure
 重启gitlab：gitlab-ctl restart
 
@@ -483,9 +441,6 @@ ssh_host: gitlab-net
 密码：admin123
 
 参考：https://www.cnblogs.com/diaomina/p/12830449.html
-
-
-
 
 ### emqx（MQTT服务器）
 
@@ -506,7 +461,7 @@ docker run -d --restart=always  \
  emqx/emqx
 ```
 
-容器启动时可能无法成功，需要给文件夹权限: 
+容器启动时可能无法成功，需要给文件夹权限:
 mkdir /opt/programs/emqx  && cd /opt/programs/emqx
 mkdir ./data && mkdir ./etc && mkdir ./log && chmod 755 ./*
 
@@ -543,10 +498,6 @@ docker run -d --restart=always \
  emqx/emqx
 ```
 
-
-
-
-
 ### elasticsearch
 
 ```
@@ -567,9 +518,6 @@ docker run -d --restart always --privileged=true \
  elasticsearch:7.14.0
 ```
 
-
-
-
 ### 生成PDF
 
 ```
@@ -578,8 +526,6 @@ docker run -d --restart always --privileged=true \
 
 docker run --rm -v /opt/tmp/$(pwd):/converted/ arachnysdocker/athenapdf athenapdf https://www.arachnys.com/the-long-road-to-achieving-true-perpetual-kyc/
 ```
-
-
 
 ### postgres
 
@@ -602,7 +548,6 @@ docker run --privileged -d --restart=always \
 
 #-e /opt/programs/postgresql/postgresql.conf:/etc/postgresql/postgresql.conf \
 ```
- 
 
 进入容器：docker exec -it postgres /bin/bash
 切换用户：su postgres
@@ -610,8 +555,6 @@ docker run --privileged -d --restart=always \
 创建用户：create user  -p -s -e root
 创建数据库：create database blogs owner=root;
 查看数据库：\l
-
-
 
 ### kafka
 
@@ -642,12 +585,13 @@ docker run -d  --restart=always \
  bitnami/kafka:latest
 
 ```
+
 </br>
 
 ### kafka的管理界面
 
 ```
-docker run --privileged  -d --restart=always \
+docker run --privileged -d --restart=always \
  --network mynet --network-alias kafdrop-net \
  -v /opt/programs/kafdrop/protobuf_desc/:/var/protobuf_desc \
  -p 9100:9000 \
@@ -658,9 +602,6 @@ docker run --privileged  -d --restart=always \
  --name kafdrop \
  obsidiandynamics/kafdrop
 ```
-
-
-
 
 ### minio
 
@@ -686,8 +627,6 @@ docker  run -d --restart=always  \
  --console-address ":9001"
 ```
 
-
-
 ### portainer：docker管理
 
 ```
@@ -703,4 +642,3 @@ docker run --privileged -d --restart=always  \
 
 主页：http://IP:9002/#!/home
 ```
-
