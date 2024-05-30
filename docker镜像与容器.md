@@ -50,16 +50,29 @@ SHELL：更改执行shell命令的程序。Linux的默认shell是["/bin/sh", "-c
 
 ```
 # 导出 ubuntu-jdk 镜像
-docker save -o ./ubuntu-jdk@v1.tar  ubuntu-jdk:v1 && gzip ./ubuntu-jdk@v1.tar
+docker save -o ./ubuntu-jdk@v1.tar ubuntu-jdk:v1 && gzip ./ubuntu-jdk@v1.tar
+docker save ubuntu-jdk:v1 > ./ubuntu-jdk@v1.tar && gzip ./ubuntu-jdk@v1.tar
+
 # 加载 ubuntu-jdk 镜像
 docker load -i ./ubuntu-jdk@v1.tar.gz 
+docker load < ./ubuntu-jdk@v1.tar.gz 
+
 
 # 导出容器
 docker export athenapdfservice > athenapdfservice.tar && gzip ./athenapdfservice.tar
 # 导入容器
 docker import - athenapdfservice < athenapdfservice.tar.gz
+
 ```
 
+## 镜像重命名
+
+```
+docker tag 原名成 目标名称
+
+如: docker tag ubuntu-jdk:v1 my-jdk:v1
+
+```
 
 
 ## 构建镜像
