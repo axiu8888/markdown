@@ -17,18 +17,34 @@ electron_mirror=https://npmmirror.com/mirrors/electron/
 
 ```
 
-## npm上传到nexus3
+## npm上传到nexus3   `^_^`
 
 ```
 # 登录
-npm login --registry=http://192.168.1.200:9001/repository/npmhosted/
-
+npm login --registry=http://192.168.124.15:9001/repository/npmhosted/
 # 打包
 npm pack
-
 # 上传
-npm publish --registry http://192.168.1.200:9001/repository/npmhosted/
+npm publish --registry http://192.168.124.15:9001/repository/npmhosted/
 
+
+# 代理
+npm config set registry http://192.168.124.15:9001/repository/npmgroup/
+# 添加账号
+npm adduser
+admin
+admin123
+dingxiuan@163
+
+
+# 仓库注册
+npm login -–registry=http://192.168.124.15:9001/repository/npmhosted
+admin
+admin123
+dingxiuan@163.com
+# 上传
+npm pack
+npm publish -–registry=http://192.168.124.15:9001/repository/npmhosted/
 ```
 
 ## 其他操作
