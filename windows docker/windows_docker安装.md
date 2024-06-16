@@ -137,15 +137,20 @@ network:
     eth0:
       dhcp4: no
       addresses: [192.168.124.15/24]
+      gateway4: 192.168.124.1
       routes:
       - to: default
-        via: 192.168.124.2
+        via: 192.168.124.1
       nameservers:
-        addresses: [192.168.124.2]
+        addresses: [8.8.8.8, 114.114.114.114, 192.168.124.1]
+```
+
 ```
 
 apt install mininet -y
 sudo netplan apply
+
+```
 
 
 ~
