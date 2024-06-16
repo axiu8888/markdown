@@ -15,7 +15,7 @@ mkdir -p /home/znsx/log
 echo -e "\n-----------------------------------"
 echo "启动 portainer"
 docker run --privileged -d --restart=always \
-  -p 9002:9000 \
+  -p 9000:9000 \
   -v /etc/localtime:/etc/localtime \
   -v /usr/bin/docker:/usr/bin/docker \
   -v /var/run/docker.sock:/var/run/docker.sock \
@@ -105,9 +105,9 @@ echo -e "\n-----------------------------------"
 echo '启动 znsx-emqx'
 docker run -d -it --privileged=true --restart=always \
   --network znsxnet --network-alias hsrg-emqx \
-  -p 1883:1883 \
-  -p 8083:8083 \
-  -p 18083:18083 \
+  -p 1883:1883/tcp \
+  -p 8083:8083/tcp \
+  -p 18083:18083/tcp \
   -v /etc/localtime:/etc/localtime \
   -v /home/znsx/data/emqx/etc:/opt/emqx/etc \
   -v /home/znsx/data/emqx/log:/opt/emqx/log \
@@ -126,7 +126,7 @@ docker run -d -it --privileged=true --restart=always \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /home/znsx/program/algorithm/midas/:/usr/local/lib/python3.6/site-packages/midas/ \
   -v /home/znsx/data/reportPath/:/home/znsx/data/reportPath/ \
-  -v /home/fileData/report/img/:/home/fileData/report/img/ \
+  -v /home/fileData/report/:/home/fileData/report/ \
   -v /home/znsx/program/algorithm/pyc.sh:/usr/local/bin/pyc.sh \
   -v /home/znsx/log/:/home/znsx/log/ \
   --name python3.6 \
@@ -139,31 +139,32 @@ docker run -d -it --privileged=true --restart=always \
   -p 80:80 \
   -p 443:443 \
   -v /etc/localtime:/etc/localtime \
+  -v /home/znsx/log/:/var/log/nginx \
   -v /home/znsx/program/web-front/:/usr/share/nginx/ \
+  -v /home/znsx/program/web-front/conf/:/etc/nginx/conf.d/ \
   -v /home/fileData/report/img/:/usr/share/nginx/www/image/ \
   -v /home/fileData/autograph/:/usr/share/nginx/www/autograph/ \
-  -v /home/fileData/headerImage/:/usr/share/nginx/www/headerImage/ \
-  -v /home/fileData/otherImage/:/usr/share/nginx/www/otherImage/ \
-  -v /home/fileData/headerImage/:/usr/share/nginx/admin/headerImage/ \
   -v /home/fileData/autograph/:/usr/share/nginx/admin/autograph/ \
+  -v /home/fileData/headerImage/:/usr/share/nginx/www/headerImage/ \
+  -v /home/fileData/headerImage/:/usr/share/nginx/admin/headerImage/ \
+  -v /home/fileData/otherImage/:/usr/share/nginx/www/otherImage/ \
   -v /home/fileData/otherImage/:/usr/share/nginx/admin/otherImage/ \
   -v /home/fileData/report/img/:/usr/share/nginx/admin/image/ \
-  -v /home/znsx/program/web-front/conf/:/etc/nginx/conf.d/ \
-  -v /home/znsx/log/:/var/log/nginx \
   --name znsx-nginx \
   nginx
 
 echo -e "\n-----------------------------------"
 echo '启动 znsx-mmhg'
-docker run -d -it --privileged=true --restart=always \
+docker run --ulimit nofile=1024 -d -it --privileged=true --restart=always \
   --network znsxnet --network-alias hsrg-mmhg \
+  -p 58006:5005/tcp \
   -p 10023:10023/tcp \
   -v /etc/localtime:/etc/localtime \
   -v /usr/bin/docker:/usr/bin/docker \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /home/znsx/program/mmhg/start.sh:/docker-entrypoint.sh \
   -v /home/znsx/program/mmhg/:/opt/app/ \
-  -v /home/znsx/:/home/znsx/ \
+  -v /home/:/home/ \
   -e LANG="C.utf8" \
   --name znsx-mmhg \
   mono-jdk:v1
@@ -172,7 +173,7 @@ echo -e "\n-----------------------------------"
 echo '启动 znsx-biz'
 docker run -d -it --privileged=true --restart=always \
   --network znsxnet --network-alias hsrg-biz \
-  -p 58000:1500/tcp \
+  -p 58000:5005/tcp \
   -p 62024:62024/tcp \
   -p 62025:62025/tcp \
   -p 52014:52014/udp \
@@ -190,7 +191,7 @@ echo -e "\n-----------------------------------"
 echo '启动 znsx-db'
 docker run -d -it --privileged=true --restart=always \
   --network znsxnet --network-alias hsrg-db \
-  -p 58001:1500/tcp \
+  -p 58001:5005/tcp \
   -v /etc/localtime:/etc/localtime \
   -v /usr/bin/docker:/usr/bin/docker \
   -v /var/run/docker.sock:/var/run/docker.sock \
@@ -205,13 +206,13 @@ echo -e "\n-----------------------------------"
 echo '启动 znsx-task'
 docker run -d -it --privileged=true --restart=always \
   --network znsxnet --network-alias hsrg-task \
-  -p 58002:1500/tcp \
+  -p 58002:5005/tcp \
   -v /etc/localtime:/etc/localtime \
   -v /usr/bin/docker:/usr/bin/docker \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /home/znsx/program/task/start.sh:/docker-entrypoint.sh \
   -v /home/znsx/program/task/:/opt/app/ \
-  -v /home/znsx/:/home/znsx/ \
+  -v /home/:/home/ \
   -e LANG="C.utf8" \
   --name znsx-task \
   hsrg-jdk:11
@@ -220,7 +221,7 @@ echo -e "\n-----------------------------------"
 echo '启动 znsx-web'
 docker run -d -it --privileged=true --restart=always \
   --network znsxnet --network-alias hsrg-web \
-  -p 58003:1500/tcp \
+  -p 58003:5005/tcp \
   -p 8081:8081/tcp \
   -p 62015:62015/tcp \
   -v /etc/localtime:/etc/localtime \
@@ -237,10 +238,10 @@ echo -e "\n-----------------------------------"
 echo '启动 znsx-bt-gateway'
 docker run -d -it --privileged=true --restart=always \
   --network znsxnet --network-alias hsrg-bt-gateway \
+  -p 28009:5005/tcp \
   -p 62080:80/tcp \
   -p 62020:62020/udp \
   -p 62021:62021/tcp \
-  -p 28009:1500/tcp \
   -v /etc/localtime:/etc/localtime \
   -v /usr/bin/docker:/usr/bin/docker \
   -v /var/run/docker.sock:/var/run/docker.sock \
@@ -253,8 +254,8 @@ echo -e "\n-----------------------------------"
 echo '启动 znsx-arrhythmia'
 docker run -d -it --privileged=true --restart=always \
   --network znsxnet --network-alias hsrg-arrhythmia \
+  -p 28008:5005/tcp \
   -p 480:80/tcp \
-  -p 28008:1500/tcp \
   -v /etc/localtime:/etc/localtime \
   -v /usr/bin/docker:/usr/bin/docker \
   -v /var/run/docker.sock:/var/run/docker.sock \
@@ -263,17 +264,6 @@ docker run -d -it --privileged=true --restart=always \
   -e LANG="C.utf8" \
   --name znsx-arrhythmia \
   hsrg-jdk:11
-
-# echo -e "\n-----------------------------------"
-# echo '启动 znsx-collector-mqtt-proxy'
-# docker run -d -it --privileged=true --restart=always \
-#   --network znsxnet --network-alias hsrg-collector-mqtt-proxy \
-#   -v /etc/localtime:/etc/localtime \
-#   -v /usr/bin/docker:/usr/bin/docker \
-#   -v /home/znsx/program/collector-mqtt-proxy/start.sh:/docker-entrypoint.sh \
-#   -v /home/znsx/program/collector-mqtt-proxy:/opt/app/ \
-#   --name znsx-collector-mqtt-proxy \
-#   hsrg-jdk:11
 
 # echo -e "\n-----------------------------------"
 # echo '启动 znsx-acserver'
@@ -309,9 +299,11 @@ echo -e "\n-----------------------------------"
 echo '启动 support-biz'
 docker run -d -it --privileged=true --restart=always \
   --network znsxnet --network-alias support-biz \
-  -p 28000:1500/tcp \
+  -p 28000:5005/tcp \
+  -p 7778:80/tcp \
   -p 7012:52014/udp \
   -p 7014:62014/udp \
+  -p 7016:62024/tcp \
   -v /etc/localtime:/etc/localtime \
   -v /usr/bin/docker:/usr/bin/docker \
   -v /var/run/docker.sock:/var/run/docker.sock \
@@ -326,7 +318,7 @@ echo -e "\n-----------------------------------"
 echo '启动 support-db'
 docker run -d -it --privileged=true --restart=always \
   --network znsxnet --network-alias support-db \
-  -p 28001:1500 \
+  -p 28001:5005 \
   -v /etc/localtime:/etc/localtime \
   -v /usr/bin/docker:/usr/bin/docker \
   -v /var/run/docker.sock:/var/run/docker.sock \
@@ -341,8 +333,9 @@ echo -e "\n-----------------------------------"
 echo '启动 support-web'
 docker run -d -it --privileged=true --restart=always \
   --network znsxnet --network-alias support-web \
+  -p 28003:5005/tcp \
   -p 7777:7777/tcp \
-  -p 28003:1500/tcp \
+  -p 7015:7015/tcp \
   -v /etc/localtime:/etc/localtime \
   -v /usr/bin/docker:/usr/bin/docker \
   -v /var/run/docker.sock:/var/run/docker.sock \

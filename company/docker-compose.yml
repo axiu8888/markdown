@@ -10,7 +10,7 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "5M" # 单个文件大小为200k
+        max-size: "20M" # 单个文件大小为200k
         max-file: "10" # 最多10个文件
     ports:
       - 58086:8086
@@ -32,7 +32,7 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "5M" # 单个文件大小为200k
+        max-size: "20M" # 单个文件大小为200k
         max-file: "10" # 最多10个文件
     ports:
       - 57017:27017
@@ -56,7 +56,7 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "5M" # 单个文件大小为200k
+        max-size: "20M" # 单个文件大小为200k
         max-file: "10" # 最多10个文件
     ports:
       - 56379:6379
@@ -78,7 +78,7 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "5M" # 单个文件大小为200k
+        max-size: "20M" # 单个文件大小为200k
         max-file: "10" # 最多10个文件
     ports:
       - 53306:3306
@@ -103,7 +103,7 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "5M" # 单个文件大小为200k
+        max-size: "20M" # 单个文件大小为200k
         max-file: "10" # 最多10个文件
     ports:
       - 1883:1883
@@ -128,7 +128,7 @@ services:
   #   logging:
   #     driver: json-file
   #     options:
-  #       max-size: "5M" # 单个文件大小为200k
+  #       max-size: "20M" # 单个文件大小为200k
   #       max-file: "10" # 最多10个文件
   #   ports:
   #     - 8080:80
@@ -141,175 +141,6 @@ services:
   #       aliases:
   #         - phpmyadmin
 
-  #----------------------------------------------znsx app--------------------------------
-  znsx-web:
-    image: hsrg-jdk:11
-    restart: always
-    container_name: znsx-web
-    logging:
-      driver: json-file
-      options:
-        max-size: "5M" # 单个文件大小为200k
-        max-file: "10" # 最多10个文件
-    ports:
-      - 8081:8081
-      - 58003:1500
-      - 62015:62015
-    environment:
-      TZ: Asia/Shanghai
-    privileged: true
-    networks:
-      znsxnet:
-        aliases:
-          - hsrg-web
-    volumes:
-      - /etc/localtime:/etc/localtime
-      - /usr/bin/docker:/usr/bin/docker
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /opt/env/:/opt/env/
-      - /home/znsx/program/web/start.sh:/docker-entrypoint.sh
-      - /home/znsx/program/web:/home/znsx/program/web
-      - /home/znsx/program/config/:/home/znsx/program/config/
-      - /home/reportPath/:/home/reportPath/
-      - /home/fileData/:/home/fileData/
-      - /home/znsx/log:/home/znsx/log
-    depends_on:
-      - znsx-mariadb
-      - znsx-redis
-      - znsx-influx
-      - znsx-mongo
-
-  # biz服务
-  znsx-biz:
-    image: hsrg-jdk:11
-    restart: always
-    container_name: znsx-biz
-    logging:
-      driver: json-file
-      options:
-        max-size: "5M" # 单个文件大小为200k
-        max-file: "10" # 最多10个文件
-    ports:
-      - 58000:1500
-      - 52014:52014/udp
-      - 62014:62014/udp
-      - 62024:62024/tcp
-      - 62025:62025/tcp
-      - 15035:15035/udp
-      - 63014:63014/tcp
-    environment:
-      TZ: Asia/Shanghai
-    privileged: true
-    networks:
-      znsxnet:
-        aliases:
-          - hsrg-biz
-    volumes:
-      - /etc/localtime:/etc/localtime
-      - /opt/env/:/opt/env/
-      - /home/znsx/program/biz/start.sh:/docker-entrypoint.sh
-      - /home/znsx/program/biz:/home/znsx/program/biz
-      - /home/znsx/program/config/:/home/znsx/program/config/
-      - /home/znsx/log:/home/znsx/log
-    depends_on:
-      - znsx-redis
-      - znsx-emqx
-
-  #db服务
-  znsx-db:
-    image: hsrg-jdk:11
-    restart: always
-    container_name: znsx-db
-    logging:
-      driver: json-file
-      options:
-        max-size: "5M" # 单个文件大小为200k
-        max-file: "10" # 最多10个文件
-    ports:
-      - 58001:1500
-    environment:
-      TZ: Asia/Shanghai
-    privileged: true
-    networks:
-      znsxnet:
-        aliases:
-          - hsrg-db
-    volumes:
-      - /etc/localtime:/etc/localtime
-      - /opt/env/:/opt/env/
-      - /home/znsx/program/db/start.sh:/docker-entrypoint.sh
-      - /home/znsx/program/db:/home/znsx/program/db
-      - /home/znsx/program/config/:/home/znsx/program/config/
-      - /home/znsx/log:/home/znsx/log
-    depends_on:
-      - znsx-redis
-      - znsx-emqx
-      - znsx-influx
-
-  #task服务
-  znsx-task:
-    image: hsrg-jdk:11
-    restart: always
-    container_name: znsx-task
-    logging:
-      driver: json-file
-      options:
-        max-size: "5M" # 单个文件大小为200k
-        max-file: "10" # 最多10个文件
-    ports:
-      - 58005:1500
-    environment:
-      TZ: Asia/Shanghai
-    privileged: true
-    networks:
-      znsxnet:
-        aliases:
-          - hsrg-db
-    volumes:
-      - /etc/localtime:/etc/localtime
-      - /usr/bin/docker:/usr/bin/docker
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /opt/env/:/opt/env/
-      - /home/znsx/program/task/start.sh:/docker-entrypoint.sh
-      - /home/znsx/program/task:/home/znsx/program/task
-      - /home/znsx/program/config/:/home/znsx/program/config/
-      - /home/znsx/log:/home/znsx/log
-    depends_on:
-      - znsx-influx
-      - znsx-mariadb
-
-  #算法服务
-  znsx-midas:
-    image: python3.6:v2
-    restart: always
-    container_name: python3.6
-    logging:
-      driver: json-file
-      options:
-        max-size: "5M" # 单个文件大小为200k
-        max-file: "10" # 最多10个文件
-    ports:
-      - 5000:5000
-    environment:
-      TZ: Asia/Shanghai
-    privileged: true
-    networks:
-      znsxnet:
-        aliases:
-          - hsrg-midas
-    volumes:
-      - /etc/localtime:/etc/localtime
-      - /usr/bin/docker:/usr/bin/docker
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /opt/env/:/opt/env/
-      - /home/znsx/program/algorithm/midas/:/usr/local/lib/python3.6/site-packages/midas/
-      - /home/znsx/data/reportPath/:/home/znsx/data/reportPath/
-      - /home/fileData/report/img/:/home/fileData/report/img/
-      - /home/znsx/log:/home/znsx/log
-    command: [ "pyc.sh" ]
-    depends_on:
-      - znsx-influx
-
   #mmhg服务
   znsx-mmhg:
     image: mono-jdk:v1
@@ -318,10 +149,11 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "5M" # 单个文件大小为200k
+        max-size: "20M" # 单个文件大小为200k
         max-file: "10" # 最多10个文件
     ports:
-      - 10023:10023
+      - 58006:5005/tcp
+      - 10023:10023/tcp
     environment:
       TZ: Asia/Shanghai
     privileged: true
@@ -337,6 +169,68 @@ services:
     depends_on:
       - znsx-web
 
+  #bt-gateway服务
+  znsx-bt-gateway:
+    image: hsrg-jdk:11
+    restart: always
+    container_name: znsx-bt-gateway
+    logging:
+      driver: json-file
+      options:
+        max-size: "20M" # 单个文件大小为200k
+        max-file: "10" # 最多10个文件
+    ports:
+      - 28009:5005/tcp
+      - 62080:80/tcp
+      - 62020:62020/udp
+      - 62021:62021/tcp
+    environment:
+      TZ: Asia/Shanghai
+    privileged: true
+    networks:
+      znsxnet:
+        aliases:
+          - hsrg-bt-gateway
+    volumes:
+      - /usr/bin/docker:/usr/bin/docker
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/localtime:/etc/localtime
+      - /home/znsx/program/bt-gateway/start.sh:/docker-entrypoint.sh
+      - /home/znsx/program/bt-gateway:/opt/app
+    depends_on:
+      - znsx-redis
+      - znsx-emqx
+
+  # #acserver服务
+  # znsx-acserver:
+  #   image: hsrg-jdk:11
+  #   restart: always
+  #   container_name: znsx-acserver
+  #   logging:
+  #     driver: json-file
+  #     options:
+  #       max-size: "20M" # 单个文件大小为200k
+  #       max-file: "10" # 最多10个文件
+  #   ports:
+  #     - 8888:8888
+  #     - 10604:10604/udp
+  #     - 10352:10352/udp
+  #   environment:
+  #     TZ: Asia/Shanghai
+  #   privileged: true
+  #   networks:
+  #     znsxnet:
+  #       aliases:
+  #         - hsrg-acserver
+  #   volumes:
+  #     - /etc/localtime:/etc/localtime
+  #     - /home/znsx/program/acserver/docker-entrypoint.sh:/docker-entrypoint.sh
+  #     - /home/znsx/program/acserver:/opt/app
+  #   depends_on:
+  #     - znsx-emqx
+
+  #----------------------------------------------znsx app 1 --------------------------------
+
   #nginx服务
   znsx-nginx:
     image: nginx:1.23
@@ -345,11 +239,11 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "5M" # 单个文件大小为200k
+        max-size: "20M" # 单个文件大小为200k
         max-file: "10" # 最多10个文件
     ports:
-      - 80:80
-      - 443:443
+      - 80:80/tcp
+      - 443:443/tcp
     environment:
       TZ: Asia/Shanghai
     privileged: true
@@ -369,61 +263,165 @@ services:
       - /home/znsx/program/web-front/conf/:/etc/nginx/conf.d/
       - /home/znsx/log/:/var/log/nginx
 
-  #bt-gateway服务
-  znsx-bt-gateway:
-    image: hsrg-jdk:11
+  #算法服务
+  znsx-midas:
+    image: python3.6:v2
     restart: always
-    container_name: znsx-bt-gateway
+    container_name: python3.6
     logging:
       driver: json-file
       options:
-        max-size: "5M" # 单个文件大小为200k
+        max-size: "20M" # 单个文件大小为200k
         max-file: "10" # 最多10个文件
     ports:
-      - 62020:62020/udp
+      - 5000:5000/tcp
     environment:
       TZ: Asia/Shanghai
     privileged: true
     networks:
       znsxnet:
         aliases:
-          - hsrg-bt-gateway
+          - hsrg-midas
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /usr/bin/docker:/usr/bin/docker
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/env/:/opt/env/
+      - /home/znsx/program/algorithm/midas/:/usr/local/lib/python3.6/site-packages/midas/
+      - /home/znsx/data/reportPath/:/home/znsx/data/reportPath/
+      - /home/fileData/report/:/home/fileData/report/
+      - /home/znsx/log:/home/znsx/log
+    command: [ "pyc.sh" ]
+    depends_on:
+      - znsx-influx
+
+
+  #----------------------------------------------znsx app 2 --------------------------------
+  # biz服务
+  znsx-biz:
+    image: hsrg-jdk:11
+    restart: always
+    container_name: znsx-biz
+    logging:
+      driver: json-file
+      options:
+        max-size: "20M" # 单个文件大小为200k
+        max-file: "10" # 最多10个文件
+    ports:
+      - 58000:5005/tcp
+      - 52014:52014/udp
+      - 62014:62014/udp
+      - 62024:62024/tcp
+      - 62025:62025/tcp
+      - 15035:15035/udp
+      - 63014:63014/tcp
+    environment:
+      TZ: Asia/Shanghai
+    privileged: true
+    networks:
+      znsxnet:
+        aliases:
+          - hsrg-biz
     volumes:
       - /etc/localtime:/etc/localtime
       - /opt/env/:/opt/env/
-      - /home/znsx/program/bt-gateway/start.sh:/docker-entrypoint.sh
-      - /home/znsx/program/bt-gateway:/opt/app
+      - /home/znsx/program/biz/start.sh:/docker-entrypoint.sh
+      - /home/znsx/program/biz/:/opt/app/
+      - /home/znsx/:/home/znsx/
     depends_on:
       - znsx-redis
       - znsx-emqx
 
-  #acserver服务
-  znsx-acserver:
+  #db服务
+  znsx-db:
     image: hsrg-jdk:11
     restart: always
-    container_name: znsx-acserver
+    container_name: znsx-db
     logging:
       driver: json-file
       options:
-        max-size: "5M" # 单个文件大小为200k
+        max-size: "20M" # 单个文件大小为200k
         max-file: "10" # 最多10个文件
     ports:
-      - 8888:8888
-      - 10604:10604/udp
-      - 10352:10352/udp
+      - 58001:5005/tcp
     environment:
       TZ: Asia/Shanghai
     privileged: true
     networks:
       znsxnet:
         aliases:
-          - hsrg-acserver
+          - hsrg-db
     volumes:
       - /etc/localtime:/etc/localtime
-      - /home/znsx/program/acserver/docker-entrypoint.sh:/docker-entrypoint.sh
-      - /home/znsx/program/acserver:/opt/app
+      - /home/znsx/program/db/start.sh:/docker-entrypoint.sh
+      - /home/znsx/program/db/:/opt/app/
+      - /home/znsx/:/home/znsx/
     depends_on:
+      - znsx-redis
       - znsx-emqx
+      - znsx-influx
+
+  #task服务
+  znsx-task:
+    image: hsrg-jdk:11
+    restart: always
+    container_name: znsx-task
+    logging:
+      driver: json-file
+      options:
+        max-size: "20M" # 单个文件大小为200k
+        max-file: "10" # 最多10个文件
+    ports:
+      - 58005:5005/tcp
+    environment:
+      TZ: Asia/Shanghai
+    privileged: true
+    networks:
+      znsxnet:
+        aliases:
+          - hsrg-db
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /usr/bin/docker:/usr/bin/docker
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/znsx/program/task/start.sh:/docker-entrypoint.sh
+      - /home/znsx/program/task/:/opt/app/
+      - /home/:/home/
+    depends_on:
+      - znsx-influx
+      - znsx-mariadb
+  znsx-web:
+    image: hsrg-jdk:11
+    restart: always
+    container_name: znsx-web
+    logging:
+      driver: json-file
+      options:
+        max-size: "20M" # 单个文件大小为200k
+        max-file: "10" # 最多10个文件
+    ports:
+      - 58003:5005/tcp
+      - 8081:8081/tcp
+      - 62015:62015/tcp
+    environment:
+      TZ: Asia/Shanghai
+    privileged: true
+    networks:
+      znsxnet:
+        aliases:
+          - hsrg-web
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /usr/bin/docker:/usr/bin/docker
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/znsx/program/web/start.sh:/docker-entrypoint.sh
+      - /home/znsx/program/web/:/opt/app/
+      - /home/:/home/
+    depends_on:
+      - znsx-mariadb
+      - znsx-redis
+      - znsx-influx
+      - znsx-mongo
 
   #----------------------------------------------support app--------------------------------
   support-emqx:
@@ -433,13 +431,13 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "5M" # 单个文件大小为200k
+        max-size: "20M" # 单个文件大小为200k
         max-file: "10" # 最多10个文件
     ports:
-      - 2883:1883
-      - 2083:8083
-      # - 28883:8883
-      - 28083:18083
+      - 2883:1883/tcp
+      - 2083:8083/tcp
+      - 28083:18083/tcp
+      # - 28883:8883/udp
     environment:
       TZ: Asia/Shanghai
     networks:
@@ -448,8 +446,70 @@ services:
           - support-emqx
     volumes:
       - /etc/localtime:/etc/localtime
-      - /home/znsx/data/emqx/etc:/opt/emqx/etc
-      - /home/znsx/data/emqx/log:/opt/emqx/log
+      - /home/znsx/data/support_emqx/etc:/opt/emqx/etc
+      - /home/znsx/data/support_emqx/log:/opt/emqx/log
+
+  #db服务
+  support-db:
+    image: hsrg-jdk:11
+    restart: always
+    container_name: support-db
+    logging:
+      driver: json-file
+      options:
+        max-size: "20M" # 单个文件大小为200k
+        max-file: "10" # 最多10个文件
+    ports:
+      - 28001:5005/tcp
+    environment:
+      TZ: Asia/Shanghai
+    privileged: true
+    networks:
+      znsxnet:
+        aliases:
+          - support-db
+    volumes:
+      - /usr/bin/docker:/usr/bin/docker
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/localtime:/etc/localtime
+      - /home/znsx/program/supportDb/start.sh:/docker-entrypoint.sh
+      - /home/znsx/program/supportDb/:/opt/app/
+      - /home/znsx/:/home/znsx/
+    depends_on:
+      - znsx-redis
+      - znsx-influx
+      - support-emqx
+
+  support-biz:
+    image: hsrg-jdk:11
+    restart: always
+    container_name: support-biz
+    logging:
+      driver: json-file
+      options:
+        max-size: "20M" # 单个文件大小为200k
+        max-file: "10" # 最多10个文件
+    ports:
+      - 28000:5005/tcp
+      - 7012:52014/udp
+      - 7014:62014/udp
+    environment:
+      TZ: Asia/Shanghai
+    privileged: true
+    networks:
+      znsxnet:
+        aliases:
+          - support-biz
+    volumes:
+      - /usr/bin/docker:/usr/bin/docker
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/localtime:/etc/localtime
+      - /home/znsx/program/supportBiz/start.sh:/docker-entrypoint.sh
+      - /home/znsx/program/supportBiz:/home/znsx/program/supportBiz
+      - /home/znsx/:/home/znsx/
+    depends_on:
+      - znsx-redis
+      - support-emqx
 
   support-web:
     image: hsrg-jdk:11
@@ -458,11 +518,12 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "5M" # 单个文件大小为200k
+        max-size: "20M" # 单个文件大小为200k
         max-file: "10" # 最多10个文件
     ports:
-      - 7777:7777
-      - 28003:1500
+      - 28003:5005/tcp
+      - 7777:7777/tcp
+      - 7015:7015/tcp
     environment:
       TZ: Asia/Shanghai
     privileged: true
@@ -474,78 +535,12 @@ services:
       - /usr/bin/docker:/usr/bin/docker
       - /var/run/docker.sock:/var/run/docker.sock
       - /etc/localtime:/etc/localtime
-      - /opt/env/:/opt/env/
       - /home/znsx/program/supportWeb/start.sh:/docker-entrypoint.sh
-      - /home/znsx/program/supportWeb:/home/znsx/program/supportWeb
-      - /home/znsx/program/config/:/home/znsx/program/config/
-      - /home/reportPath/:/home/reportPath/
-      - /home/fileData/:/home/fileData/
-      - /home/znsx/log:/home/znsx/log
+      - /home/znsx/program/supportWeb/:/opt/app/
+      - /home/:/home/
     depends_on:
       - support-emqx
       - znsx-mariadb
       - znsx-redis
       - znsx-influx
       - znsx-mongo
-
-  support-biz:
-    image: hsrg-jdk:11
-    restart: always
-    container_name: support-biz
-    logging:
-      driver: json-file
-      options:
-        max-size: "5M" # 单个文件大小为200k
-        max-file: "10" # 最多10个文件
-    ports:
-      - 28000:1500
-      - 7012:52014/udp
-      - 7014:62014/udp
-    environment:
-      TZ: Asia/Shanghai
-    privileged: true
-    networks:
-      znsxnet:
-        aliases:
-          - support-biz
-    volumes:
-      - /etc/localtime:/etc/localtime
-      - /opt/env/:/opt/env/
-      - /home/znsx/program/supportBiz/start.sh:/docker-entrypoint.sh
-      - /home/znsx/program/supportBiz:/home/znsx/program/supportBiz
-      - /home/znsx/program/config/:/home/znsx/program/config/
-      - /home/znsx/log:/home/znsx/log
-    depends_on:
-      - znsx-redis
-      - support-emqx
-
-  #db服务
-  support-db:
-    image: hsrg-jdk:11
-    restart: always
-    container_name: support-db
-    logging:
-      driver: json-file
-      options:
-        max-size: "5M" # 单个文件大小为200k
-        max-file: "10" # 最多10个文件
-    ports:
-      - 28001:1500
-    environment:
-      TZ: Asia/Shanghai
-    privileged: true
-    networks:
-      znsxnet:
-        aliases:
-          - support-db
-    volumes:
-      - /etc/localtime:/etc/localtime
-      - /opt/env/:/opt/env/
-      - /home/znsx/program/supportDb/start.sh:/docker-entrypoint.sh
-      - /home/znsx/program/supportDb:/home/znsx/program/supportDb
-      - /home/znsx/program/config/:/home/znsx/program/config/
-      - /home/znsx/log:/home/znsx/log
-    depends_on:
-      - znsx-redis
-      - znsx-influx
-      - support-emqx

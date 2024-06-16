@@ -57,11 +57,15 @@ docker save ubuntu-jdk:v1 > ./ubuntu-jdk@v1.tar && gzip ./ubuntu-jdk@v1.tar
 docker load -i ./ubuntu-jdk@v1.tar.gz 
 docker load < ./ubuntu-jdk@v1.tar.gz 
 
+# 将容器保存为镜像
+docker commit [CONTAINER ID] [IMAGE NAME]  #容器ID  创建的镜像名
+docker commit ubuntu-jdk ubuntu-jdk:v2
+
 
 # 导出容器
 docker export athenapdfservice > athenapdfservice.tar && gzip ./athenapdfservice.tar
 # 导入容器
-docker import - athenapdfservice < athenapdfservice.tar.gz
+docker import athenapdfservice < athenapdfservice.tar.gz
 
 ```
 
@@ -83,9 +87,14 @@ FROM ubuntu:22.04
 #作者
 MAINTAINER dingxiuan <dingxiuan@163.com>
 # 版本
-LABEL version=1.0  description=ubuntu-jdk:21
+LABEL version=1.0  description=ubuntu-jdk:11
 # 适配部分docker不支持的问题
-RUN apt-get update && apt-get install -y libltdl7
+RUN apt-get update \
+ && apt-get install -y libltdl7 \
+ && apt-get install -y fontconfig libfreetype6 \
+ && apt-get install -y vim \
+ && apt-get install -y net-tools \
+ && apt install -y iputils-ping
 # ENV TIME_ZONE Asia/Shanghai
 #系统编码
 #ENV LANG=C.UTF-8
@@ -114,7 +123,7 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 #--rm :设置镜像成功后删除中间容器；
 #--tag, -t: 镜像的名字及标签，通常 name:tag 或者 name 格式；
 # 拷贝Dockerfile和start.sh文件到centos，然后执行如下命令
-# docker build -f Dockerfile --rm  --tag ubuntu-jdk:21 .
+# docker build -f Dockerfile --rm  --tag ubuntu-jdk:11 .
 ```
 
 
@@ -163,11 +172,13 @@ mkdir -p logs && chmod 755 logs
     fi
 }
 
-exec java -jar $jar \
+exec java -jar \
     -Duser.timezone=GMT+08 \
-    -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:1500 \
+    -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:5005 \
+    $jar \
     --spring.config.location=$config \
-    >>./logs/$jarName.log
+    >>./logs/$jarName.log \
+    2>&1
 ```
 
 
@@ -203,6 +214,19 @@ docker run -d --restart=always \
 1. sh脚本是dos类型的，需要改为unix   https://www.cnblogs.com/cf532088799/p/7719935.html
 : set ff=unix
 
+
+
+## docker 内部执行操作
+
+```
+安装基本的命令
+
+apt-get update
+apt-get install vim
+apt-get install net-tools
+apt-get install iputils-ping
+
+```
 
 
 ~
