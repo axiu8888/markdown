@@ -1,0 +1,27 @@
+# https://learn.microsoft.com/zh-cn/windows/wsl/wsl-config
+[wsl2]
+# Limits VM memory to use no more than 4 GB, this can be set as whole numbers using GB or MB
+memory=8GB
+# Sets the VM to use two virtual processors
+processors=4
+# Turn on default connection to bind WSL 2 localhost to Windows localhost. Setting is ignored when networkingMode=mirrored
+localhostforwarding=true
+# Disables nested virtualization
+nestedVirtualization=false
+# 如果值为 mirrored，则会启用镜像网络模式。 默认或无法识别的字符串会生成 NAT 网络。
+# networkingMode=bridged
+networkingMode=mirrored
+
+vmSwitch=WSLBridge
+# 检测空闲 CPU 使用率后，自动释放缓存的内存。 设置为 gradual 以慢速释放，设置为 dropcache 以立即释放缓存的内存。
+autoMemoryReclaim=gradual
+# 更改将 DNS 请求从 WSL 代理到 Windows 的方式
+dnsTunneling=true
+# 如果设置为 true，则 Windows 防火墙规则以及特定于 Hyper-V 流量的规则可以筛选 WSL 网络流量。
+firewall=false
+# 强制 WSL 使用 Windows 的 HTTP 代理信息
+autoProxy=false
+# 一个布尔值，用于在 WSL 中打开或关闭对 GUI 应用程序 (WSLg) 的支持。 仅适用于 Windows 11。
+guiApplications=false
+# 用于打开或关闭嵌套虚拟化的布尔值，使其他嵌套 VM 能够在 WSL 2 中运行。 仅适用于 Windows 11。
+nestedVirtualization=true

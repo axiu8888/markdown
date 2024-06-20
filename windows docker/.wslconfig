@@ -1,9 +1,0 @@
-[wsl2]
-networkingMode=bridged
-vmSwitch=WSLBridge
-autoMemoryReclaim=gradual
-dnsTunneling=true
-firewall=false
-autoProxy=true
-ipv6=true
-dhcp=true
