@@ -33,9 +33,7 @@ wsl --install -d Ubuntu-22.04
 
 ```
 
-
 关于
-
 
 ## 建立软连接
 
@@ -69,12 +67,9 @@ chmod +x ./bash_completion
 
 ## 网络配置
 
-
 ### 启用hyper-v
 
 在powershell的超级管理员模式下执行 hyper-v_enable.cmd，然后重启
-
-
 
 ### .wslconfig配置
 
@@ -83,6 +78,7 @@ chmod +x ./bash_completion
 关于 `.wslconfig` 的配置说明: [https://learn.microsoft.com/zh-cn/windows/wsl/wsl-config](https://learn.microsoft.com/zh-cn/windows/wsl/wsl-config)
 
 创建文件 C:/Users/Administrator/.wslconfig
+
 ```
 [wsl2]
 networkingMode=bridged
@@ -127,6 +123,7 @@ vim /etc/resolv.conf
 ```
 
 nameserver 8.8.8.8
+nameserver 8.8.4.4
 nameserver 114.114.114.114
 nameserver 192.168.124.1
 

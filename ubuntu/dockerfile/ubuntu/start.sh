@@ -32,9 +32,10 @@ mkdir -p logs && chmod 755 logs
   fi
 }
 
-exec java -jar $jar \
+exec java -jar \
   -Duser.timezone=GMT+08 \
   -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:5005 \
+  $jar \
   --spring.config.location=$config \
   >>./logs/$jarName.log \
   2>&1
