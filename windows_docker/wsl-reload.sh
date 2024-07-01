@@ -14,13 +14,17 @@ wsl --list -v
 # wsl --install -d Ubuntu-24.04
 
 
-destDir=D:/develop/wsl
-tmpDir=D:/develop/wsl/tmp
-
-mkdir -p $destDir && mkdir -p $tmpDir
+dir=D:/develop/wsl
+mkdir -p $dir
 
 name=Ubuntu-24.04
-wsl --export $name $tmpDir/$name.tar
+echo "exec ==>: wsl --export $name $dir/$name.tar"
+wsl --export $name $dir/$name.tar
+
+echo "exec ==>: wsl --unregister $name"
 wsl --unregister $name
-wsl --import $name $destDir/$name $tmpDir/$name.tar --version 2
-echo "$name end"
+
+echo "exec ==>: wsl --import $name $dir/$name $dir/$name.tar --version 2"
+wsl --import $name $dir/$name $dir/$name.tar --version 2
+
+echo "$name end..."

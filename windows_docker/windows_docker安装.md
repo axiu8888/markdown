@@ -58,6 +58,28 @@ chmod +x ./bash_completion
 
 ```
 
+## docker镜像加速的问题
+
+参考：[https://github.com/cmliu/CF-Workers-docker.io/issues/8](https://github.com/cmliu/CF-Workers-docker.io/issues/8)
+
+```
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json <<EOF
+{
+    "registry-mirrors": [
+        "https://hub.uuuadc.top",
+        "https://docker.anyhub.us.kg",
+        "https://dockerhub.jobcher.com",
+        "https://dockerhub.icu",
+        "https://docker.ckyl.me",
+        "https://docker.awsl9527.cn"
+    ]
+}
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+
 ## wsl 无法解析服务器的名称或地址
 
 修改DNS

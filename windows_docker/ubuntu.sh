@@ -5,7 +5,6 @@ apt-get update -y
 apt-get install vim -y
 apt-get install net-tools -y
 apt-get install tree -y
-apt-get --fix-broken install -y
 # apt-get install trace-routers -y
 
 
@@ -47,3 +46,6 @@ source /etc/bash_completion
 
 # sudo systemctl daemon-reload		#重启daemon进程
 # sudo systemctl restart docker		#重启docker
+
+
+apt-get --fix-broken install -y
