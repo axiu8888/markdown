@@ -21,15 +21,15 @@ electron_mirror=https://npmmirror.com/mirrors/electron/
 
 ```
 # 登录
-npm login --registry=http://192.168.124.15:9001/repository/npmhosted/
+npm login --registry=http://127.0.0.1:9001/repository/npmhosted/
 # 打包
 npm pack
 # 上传
-npm publish --registry http://192.168.124.15:9001/repository/npmhosted/
+npm publish --registry http://127.0.0.1:9001/repository/npmhosted/
 
 
 # 代理
-npm config set registry http://192.168.124.15:9001/repository/npmgroup/
+npm config set registry http://127.0.0.1:9001/repository/npmgroup/
 # 添加账号
 npm adduser
 admin
@@ -38,13 +38,13 @@ dingxiuan@163
 
 
 # 仓库注册
-npm login -–registry=http://192.168.124.15:9001/repository/npmhosted
+npm login -–registry=http://127.0.0.1:9001/repository/npmhosted
 admin
 admin123
 dingxiuan@163.com
 # 上传
 npm pack
-npm publish -–registry=http://192.168.124.15:9001/repository/npmhosted/
+npm publish -–registry=http://127.0.0.1:9001/repository/npmhosted/
 ```
 
 ## 其他操作
