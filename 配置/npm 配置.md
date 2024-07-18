@@ -38,13 +38,13 @@ dingxiuan@163
 
 
 # 仓库注册
-npm login -–registry=http://127.0.0.1:9001/repository/npmhosted
+npm login --registry=http://127.0.0.1:9001/repository/npmhosted
 admin
 admin123
 dingxiuan@163.com
 # 上传
 npm pack
-npm publish -–registry=http://127.0.0.1:9001/repository/npmhosted/
+npm publish --registry=http://127.0.0.1:9001/repository/npmhosted/
 ```
 
 ## 其他操作

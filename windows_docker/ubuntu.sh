@@ -4,6 +4,7 @@ apt-get update -y
 
 apt-get install vim -y
 apt-get install net-tools -y
+apt-get install tcpdump -y
 apt-get install tree -y
 # apt-get install trace-routers -y
 
