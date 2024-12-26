@@ -1,0 +1,14 @@
+{
+    "bip": "192.168.0.1/24",
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "50M",
+        "max-file": "3"
+    },
+    "registry-mirrors": [
+        "https://docker.m.daocloud.io",
+        "https://dockerproxy.com",
+        "https://docker.mirrors.ustc.edu.cn",
+        "https://docker.nju.edu.cn"
+    ]
+}
