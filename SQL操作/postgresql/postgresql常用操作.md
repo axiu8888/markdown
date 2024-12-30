@@ -50,6 +50,15 @@ DROP DATABASE test;
 # 将字段改为主键
 ALTER TABLE hs_disease ADD PRIMARY KEY (id);
 
+# 数据库重命名
+ALTER DATABASE test RENAME TO test22;
+
+# 更新字段值
+UPDATE hs_disease_dict
+SET org_id = '64a6cd8f91e6444d9940c9cd9b7a9fc5'
+WHERE create_time >= to_timestamp('2024-12-10 00:00:00', 'YYYY-MM-DD HH24:MI:SS') AND org_id IS NULL;
+
+
 ```
 
 
