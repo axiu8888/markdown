@@ -58,6 +58,9 @@ UPDATE hs_disease_dict
 SET org_id = '64a6cd8f91e6444d9940c9cd9b7a9fc5'
 WHERE create_time >= to_timestamp('2024-12-10 00:00:00', 'YYYY-MM-DD HH24:MI:SS') AND org_id IS NULL;
 
+# 添加字段和注释
+ALTER TABLE ubreath_recipel ADD COLUMN business_id VARCHAR(32);
+COMMENT ON COLUMN ubreath_recipel.business_id IS '业务ID，用于统计进度';
 
 ```
 
