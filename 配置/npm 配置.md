@@ -1,6 +1,5 @@
 # npm 配置
 
-
 ## .npmrc 配置
 
 ```
@@ -9,7 +8,6 @@ electron_mirror=https://npmmirror.com/mirrors/electron/
 disturl=https://npmmirror.com/mirrors/node/
 node_mirror=https://npmmirror.com/mirrors/node/
 ```
-
 
 ## 代理
 
@@ -68,10 +66,10 @@ npm publish --registry=http://127.0.0.1:9001/repository/npmhosted/
 
 ~
 
-
 ## nvm 配置
 
 ### 下载和安装
+
 ```
 cd ~/
 git clone https://github.com/nvm-sh/nvm.git .nvm
@@ -79,24 +77,20 @@ git clone https://github.com/nvm-sh/nvm.git .nvm
 
 添加配置
 vim ~/.profile  或者  vim ~/.bashrc
+
 ```
-export NVM_DIR="$HOME/.nvm"
+export NVM_DIR="/opt/env/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 ```
+
 source ~/.profile
 source ~/.bashrc
 
-
-
 ### 常用命令
-
 
 1. 查看远程可用的版本：`nvm ls-remote`
 2. 安装：`nvm install v23.5.0`
 3. 指定版本：`nvm use v23.5.0`
 
-
-
 ~
-

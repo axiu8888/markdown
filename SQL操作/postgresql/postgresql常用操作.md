@@ -1,11 +1,11 @@
-
 # postgresql 的常用命令行操作
 
-------------------------------------
+---
 
 ### 连接
 
 连接到命令行界面
+
 ```
 # 不进入数据库
 psql -h 127.0.0.1 -p 5432 -U postgres
@@ -15,7 +15,7 @@ psql -h 127.0.0.1 -p 5432 -U postgres -d test
 
 ```
 
-------------------------------------
+---
 
 ### 导入/导出
 
@@ -25,7 +25,7 @@ psql -h 127.0.0.1 -p 5432 -U postgres -d test
 pg_dump -h localhost -p 5432 -U postgres  -d test  -f ./test.dmp
 
 # 导入
-psql -h localhost -p 5432 -U postgres -d test -f /test.dmp
+psql -h localhost -p 5432 -U postgres -d test -f ./test.dmp
 
 
 # 说明
@@ -38,7 +38,7 @@ psql -h localhost -p 5432 -U postgres -d test -f /test.dmp
 
 ```
 
-------------------------------------
+---
 
 ### 常用命令
 
@@ -64,8 +64,7 @@ COMMENT ON COLUMN ubreath_recipel.business_id IS '业务ID，用于统计进度'
 
 ```
 
-
-------------------------------------
+---
 
 ### 其他命令
 
@@ -103,9 +102,7 @@ select usename from pg_user; // 获取系统用户信息
 drop User 用户名             // 删除用户
 ```
 
-
-------------------------------------
-
+---
 
 ### 通过存储过程删除视图，修改字段长度，再重新创建视图
 
@@ -474,3 +471,44 @@ CREATE VIEW view_user_business AS SELECT a.business_id,
 end;
 
 ```
+
+---
+
+## jsonb 操作
+
+```
+
+-- 创建 test_json 表
+CREATE TABLE test_json (
+    id SERIAL PRIMARY KEY,
+    data JSONB
+);
+
+-- 插入数据
+INSERT INTO test_json (data) VALUES
+('{"name": "Alice", "age": 25, "skills": ["Python", "SQL"]}'),
+('{"name": "Bob", "age": 30, "skills": ["Java", "PostgreSQL"]}');
+
+-- 查询
+使用 -> 或 ->> 操作符：
+->：返回 JSON 对象或数组。
+->>：返回 JSON 字段的文本值。
+
+SELECT data->>'name' AS name FROM test_json;
+
+SELECT data->'age' AS age FROM test_json;
+
+
+查询嵌套 JSON 数据
+对于嵌套字段，使用 #> 或 #>>：
+#>：返回嵌套字段的 JSON 对象。
+#>>：返回嵌套字段的文本值。
+
+
+INSERT INTO test_json (data) VALUES
+('{"name": "Alice", "address": {"city": "New York", "zip": "10001"}}');
+
+
+```
+
+

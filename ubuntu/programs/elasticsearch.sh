@@ -1,7 +1,7 @@
 #!/bin/bash
 
-baseDir=/opt/programs
 # source $PWD/conf.properties
+baseDir=/opt/programs
 
 echo ""
 echo "-----------------------------------"
